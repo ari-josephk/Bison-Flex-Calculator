@@ -1,5 +1,7 @@
 %{
 #include <iostream>
+#include <math.h>
+#include "util.h"
 
 int yylex(); // A function that is to be generated and provided by flex,
              // which returns a next token when called repeatedly.
@@ -7,7 +9,7 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %}
 
 %union {
-    int val;
+    float val;
     /* You may include additional fields as you want. */
     /* char op; */
 };
@@ -15,11 +17,13 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %start prog
 
 %token LPAREN RPAREN
-%token PLUS MINUS MUL DIV
+%token PLUS MINUS MUL DIV POW
+%token SIN COS TAN
+%token MOD FLOOR CEIL ABS
 %token <val> NUM    /* 'val' is the (only) field declared in %union
                        which represents the type of the token. */
 
-%type <val> expr term factor
+%type <val> expr term power factor trig_function standard_function
 
 %%
 
@@ -29,16 +33,34 @@ prog : expr                             { std::cout << $1 << std::endl; }
 expr : expr PLUS term                   { $$ = $1 + $3; }
      | expr MINUS term                  { $$ = $1 - $3; }
      | term                             /* default action: { $$ = $1; } */
+     | trig_function
+     | standard_function
      ;
 
 term : term MUL factor                  { $$ = $1 * $3; }
      | term DIV factor                  { $$ = $1 / $3; }
-     | factor                           /* default action: { $$ = $1; } */
+     | power                           /* default action: { $$ = $1; } */
+     ;
+
+power : factor POW factor               { $$ = pow($1, $3); }
+     | factor
      ;
 
 factor : NUM                            /* default action: { $$ = $1; } */
-       | LPAREN expr RPAREN             { $$ = $2; }
-       ;
+     | LPAREN expr RPAREN               { $$ = $2; }
+     ; 
+
+
+trig_function : COS factor                { $$ = cos($2); }
+     | SIN factor                         { $$ = sin($2); }
+     | TAN factor                         { $$ = tan($2); }
+     ;
+
+standard_function : expr MOD factor       { $$ = modulo($1, $3); }
+     | FLOOR factor                       { $$ = floor($2); }
+     | CEIL factor                        { $$ = ceil($2); }
+     | ABS factor                         { $$ = fabs($2); }
+     ;
 
 %%
 
