@@ -37,7 +37,7 @@
 "fah_to_cel"            { return FAH_TO_CEL; }
 "mi_to_km"              { return MI_TO_KM; }
 "km_to_mi"              { return KM_TO_MI; }
-"\n"                    { return EOL;}     
+(\n|\r\n)                    { return EOL;}     
 
 [ \t]+              { /* Ignore white characters. */ }
 .                       { std::cerr << "Invalid token" << std::endl; exit(1); }
