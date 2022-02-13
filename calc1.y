@@ -21,10 +21,11 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %token SIN COS TAN
 %token MOD FLOOR CEIL ABS
 %token LOG2 LOG10
+%token GBP_TO_USD USD_TO_GBP GBP_TO_EURO EURO_TO_GBP USD_TO_EURO EURO_TO_USD CEL_TO_FAH FAH_TO_CEL MI_TO_KM KM_TO_MI
 %token <val> NUM    /* 'val' is the (only) field declared in %union
                        which represents the type of the token. */
 
-%type <val> expr term power factor trig_function standard_function log_function
+%type <val> expr term power factor trig_function standard_function log_function conversion
 
 %%
 
@@ -37,6 +38,7 @@ expr : expr PLUS term                   { $$ = $1 + $3; }
      | trig_function
      | standard_function
      | log_function
+     | conversion
      ;
 
 term : term MUL factor                  { $$ = $1 * $3; }
@@ -53,21 +55,31 @@ factor : NUM                            /* default action: { $$ = $1; } */
      ; 
 
 
-trig_function : COS factor                { $$ = cos($2); }
-     | SIN factor                         { $$ = sin($2); }
-     | TAN factor                         { $$ = tan($2); }
+trig_function : COS factor              { $$ = cos($2); }
+     | SIN factor                       { $$ = sin($2); }
+     | TAN factor                       { $$ = tan($2); }
      ;
 
-standard_function : expr MOD factor       { $$ = modulo($1, $3); }
-     | FLOOR factor                       { $$ = floor($2); }
-     | CEIL factor                        { $$ = ceil($2); }
-     | ABS factor                         { $$ = fabs($2); }
+standard_function : expr MOD factor     { $$ = modulo($1, $3); }
+     | FLOOR factor                     { $$ = floor($2); }
+     | CEIL factor                      { $$ = ceil($2); }
+     | ABS factor                       { $$ = fabs($2); }
      ;
 
-log_function : LOG2 factor           { $$ = log2($2); }
-     | LOG10 factor                  { $$ = log10($2); }  
+log_function : LOG2 factor              { $$ = log2($2); }
+     | LOG10 factor                     { $$ = log10($2); }  
      ;
 
+conversion : expr GBP_TO_USD            { $$ = gbp_to_usd($1); }
+     | expr USD_TO_GBP                  { $$ = usd_to_gbp($1); } 
+     | expr GBP_TO_EURO                 { $$ = gbp_to_euro($1); }
+     | expr EURO_TO_GBP                 { $$ = euro_to_gbp($1); }
+     | expr USD_TO_EURO                 { $$ = usd_to_gbp($1); }
+     | expr EURO_TO_USD                 { $$ = euro_to_gbp($1); }
+     | expr CEL_TO_FAH                  { $$ = cel_to_fah($1); }
+     | expr FAH_TO_CEL                  { $$ = fah_to_cel($1); }
+     | expr MI_TO_KM                    { $$ = m_to_km($1); }
+     | expr KM_TO_MI                    { $$ = km_to_m($1); }
 %%
 
 int main()
