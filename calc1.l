@@ -25,6 +25,8 @@
 "sin"                   { return SIN; }
 "cos"                   { return COS; }
 "tan"                   { return TAN; }
+"log2"                  { return LOG2; }
+"log10"                 { return LOG10; }
 [ \t\r\n]+              { /* Ignore white characters. */ }
 .                       { std::cerr << "Invalid token" << std::endl; exit(1); }
 

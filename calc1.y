@@ -20,10 +20,11 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %token PLUS MINUS MUL DIV POW
 %token SIN COS TAN
 %token MOD FLOOR CEIL ABS
+%token LOG2 LOG10
 %token <val> NUM    /* 'val' is the (only) field declared in %union
                        which represents the type of the token. */
 
-%type <val> expr term power factor trig_function standard_function
+%type <val> expr term power factor trig_function standard_function log_function
 
 %%
 
@@ -35,6 +36,7 @@ expr : expr PLUS term                   { $$ = $1 + $3; }
      | term                             /* default action: { $$ = $1; } */
      | trig_function
      | standard_function
+     | log_function
      ;
 
 term : term MUL factor                  { $$ = $1 * $3; }
@@ -60,6 +62,10 @@ standard_function : expr MOD factor       { $$ = modulo($1, $3); }
      | FLOOR factor                       { $$ = floor($2); }
      | CEIL factor                        { $$ = ceil($2); }
      | ABS factor                         { $$ = fabs($2); }
+     ;
+
+log_function : LOG2 factor           { $$ = log2($2); }
+     | LOG10 factor                  { $$ = log10($2); }  
      ;
 
 %%
