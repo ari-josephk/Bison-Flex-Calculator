@@ -13,7 +13,7 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %}
 
 %union {
-    float val;
+    double val;
     char id[64];
     /* You may include additional fields as you want. */
     /* char op; */
@@ -115,6 +115,7 @@ conversion : factor GBP_TO_USD            { $$ = gbp_to_usd($1); }
      | factor KM_TO_MI                    { $$ = km_to_m($1); }
 
 assignment : VAR_KEYWORD VARIABLE EQUALS expr EOL { 
+                                             std::cout << $4 << std::endl;
                                              put_var($2, $4);
                                         }
 %%

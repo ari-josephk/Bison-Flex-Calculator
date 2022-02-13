@@ -19,34 +19,34 @@
 "("                     { return LPAREN; }
 ")"                     { return RPAREN; }
 "="                     { return EQUALS; }
-"pow"                   { return POW; }
-"mod"                   { return MOD; }
-"floor"                 { return FLOOR; }
-"ceil"                  { return CEIL; }
-"sqrt"                  { return SQRT; }
-"abs"                   { return ABS; }
-"sin"                   { return SIN; }
-"cos"                   { return COS; }
-"tan"                   { return TAN; }
-"log2"                  { return LOG2; }
-"log10"                 { return LOG10; }
-"factorial"             { return FACTORIAL; }
-"gbp_to_usd"            { return GBP_TO_USD; }
-"usd_to_gbp"            { return USD_TO_GBP; }
-"gbp_to_euro"           { return GBP_TO_EURO; }
-"euro_to_gbp"           { return EURO_TO_GBP; }
-"usd_to_euro"           { return USD_TO_EURO; }
-"euro_to_usd"           { return EURO_TO_USD; }
-"cel_to_fah"            { return CEL_TO_FAH; }
-"fah_to_cel"            { return FAH_TO_CEL; }
-"mi_to_km"              { return MI_TO_KM; }
-"km_to_mi"              { return KM_TO_MI; }
-"pi"                    { return PI; }
-"var"                   { return VAR_KEYWORD; }
+pow|POW                 { return POW; }
+mod|MOD                 { return MOD; }
+floor|FLOOR             { return FLOOR; }
+ceil|CEIL               { return CEIL; }
+sqrt|SQRT               { return SQRT; }
+abs|ABS                 { return ABS; }
+sin|SIN                 { return SIN; }
+cos|COS                 { return COS; }
+tan|TAN                 { return TAN; }
+log2|LOG2               { return LOG2; }
+log10|log10             { return LOG10; }
+factorial|FACTORIAL     { return FACTORIAL; }
+gbp_to_usd|GBP_TO_USD   { return GBP_TO_USD; }
+usd_to_gbp|USD_TO_GBP   { return USD_TO_GBP; }
+gbp_to_euro|GBP_TO_USD  { return GBP_TO_EURO; }
+euro_to_gbp|EURO_TO_GBP { return EURO_TO_GBP; }
+usd_to_euro|USD_TO_GBP  { return USD_TO_EURO; }
+euro_to_usd|EURO_TO_USD { return EURO_TO_USD; }
+cel_to_fah|CEL_TO_FAH   { return CEL_TO_FAH; }
+fah_to_cel|FAH_TO_CEL   { return FAH_TO_CEL; }
+mi_to_km|MI_TO_KM       { return MI_TO_KM; }
+km_to_mi|KM_TO_MI       { return KM_TO_MI; }
+pi|PI                   { return PI; }
+var|VAR                 { return VAR_KEYWORD; }
 [A-Za-z][][A-Za-z0-9.]* { strcpy(yylval.id, yytext); return VARIABLE; }
 (\n|\r\n)               { return EOL;}     
 
-[ \r\t]+                  { /* Ignore white characters. */ }
+[ \r\t]+                { /* Ignore white characters. */ }
 .                       { std::cerr << "Invalid token" << std::endl; exit(1); }
 
 %%
