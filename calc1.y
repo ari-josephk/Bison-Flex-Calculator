@@ -24,12 +24,21 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %token GBP_TO_USD USD_TO_GBP GBP_TO_EURO EURO_TO_GBP USD_TO_EURO EURO_TO_USD CEL_TO_FAH FAH_TO_CEL MI_TO_KM KM_TO_MI
 %token <val> NUM    /* 'val' is the (only) field declared in %union
                        which represents the type of the token. */
+%token EOL
 
 %type <val> expr term power factor trig_function standard_function log_function conversion
 
 %%
 
-prog : expr                             { std::cout << $1 << std::endl; }
+prog : calcs EOL                        { YYACCEPT; }
+     | EOL                              { YYACCEPT; }
+     ;
+
+calcs: calc
+     | calcs calc
+     ;
+
+calc: expr EOL                          { std::cout << $1 << std::endl; }
      ;
 
 expr : expr PLUS term                   { $$ = $1 + $3; }
