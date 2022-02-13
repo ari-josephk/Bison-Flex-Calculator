@@ -5,26 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "util.h"
-
-typedef struct var { char *name; float val; struct var *next; } var;
-
-var *var_table = NULL;
-
-var *get_var(char *name){
-     for (var *p = var_table; p; p = p->next){
-          if (strcmp (p->name, name) == 0)
-               return p;
-     }
-     return NULL;
-}
-
-void put_var(char *name, float val){
-     var *put = (var *)malloc(sizeof (var));
-     put->name = strdup(name);
-     put->val = val;
-     put->next = var_table;
-     var_table = put;
-}
+#include "var.h"
 
 int yylex(); // A function that is to be generated and provided by flex,
              // which returns a next token when called repeatedly.
@@ -76,6 +57,7 @@ expr : expr PLUS term                   { $$ = $1 + $3; }
 
 term : term MUL factor                  { $$ = $1 * $3; }
      | term DIV factor                  { $$ = $1 / $3; }
+     | term LPAREN expr RPAREN          { $$ = $1 * $3; }
      | power 
      | function                          /* default action: { $$ = $1; } */
      ;
@@ -85,6 +67,7 @@ power : factor POW factor               { $$ = pow($1, $3); }
      ;
 
 factor : NUM                            /* default action: { $$ = $1; } */
+     | MINUS factor                     { $$ = -$2; }
      | PI                               { $$ = 3.14; }
      | LPAREN expr RPAREN               { $$ = $2; }
      | VARIABLE                         {

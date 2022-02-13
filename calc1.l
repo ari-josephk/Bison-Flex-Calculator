@@ -11,7 +11,7 @@
 
                         /* 'val' in 'yylval.val' is the field declared in
                            calc1.y with the %union directive. */
--?[0-9]+\.?[0-9]*|\.[0-9]+ { yylval.val = atof(yytext); return NUM; }
+[0-9]+\.?[0-9]*|\.[0-9]+ { yylval.val = atof(yytext); return NUM; }
 "+"                     { return PLUS; }
 "-"                     { return MINUS; }
 "*"                     { return MUL; }
@@ -46,7 +46,7 @@
 [A-Za-z][][A-Za-z0-9.]* { strcpy(yylval.id, yytext); return VARIABLE; }
 (\n|\r\n)               { return EOL;}     
 
-[ \t]+                  { /* Ignore white characters. */ }
+[ \r\t]+                  { /* Ignore white characters. */ }
 .                       { std::cerr << "Invalid token" << std::endl; exit(1); }
 
 %%
