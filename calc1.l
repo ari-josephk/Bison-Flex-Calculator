@@ -1,6 +1,7 @@
 %{
 #include <iostream>
 #include <stdlib.h>
+#include <string.h>
 #include "calc1.tab.h"  /* We want the tokens defined in calc1.y. */
 %}
 
@@ -38,12 +39,12 @@
 "fah_to_cel"            { return FAH_TO_CEL; }
 "mi_to_km"              { return MI_TO_KM; }
 "km_to_mi"              { return KM_TO_MI; }
-"pi"                    { return PI;}
+"pi"                    { return PI; }
 "var"                   { return VAR_KEYWORD; }
-[A-Za-z][][A-Za-z0-9.]* { yylval.id = yytext; return VARIABLE; }
+[A-Za-z][][A-Za-z0-9.]* { strcpy(yylval.id, yytext); return VARIABLE; }
 (\n|\r\n)               { return EOL;}     
 
-[ \t]+              { /* Ignore white characters. */ }
+[ \t]+                  { /* Ignore white characters. */ }
 .                       { std::cerr << "Invalid token" << std::endl; exit(1); }
 
 %%
