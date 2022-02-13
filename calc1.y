@@ -17,13 +17,14 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %start prog
 
 %token LPAREN RPAREN
-%token PLUS MINUS MUL DIV POW
+%token PLUS MINUS MUL DIV POW EQUALS
 %token SIN COS TAN
 %token MOD FLOOR CEIL ABS
 %token LOG2 LOG10
+%token PI
 %token GBP_TO_USD USD_TO_GBP GBP_TO_EURO EURO_TO_GBP USD_TO_EURO EURO_TO_USD CEL_TO_FAH FAH_TO_CEL MI_TO_KM KM_TO_MI
-%token <val> NUM    /* 'val' is the (only) field declared in %union
-                       which represents the type of the token. */
+%token VAR_KEYWORD 
+%token <val> NUM VARIABLE
 %token EOL
 
 %type <val> expr term power factor trig_function standard_function log_function conversion
@@ -39,6 +40,7 @@ calcs: calc
      ;
 
 calc: expr EOL                          { std::cout << $1 << std::endl; }
+     | assignment EOL
      ;
 
 expr : expr PLUS term                   { $$ = $1 + $3; }
@@ -48,6 +50,7 @@ expr : expr PLUS term                   { $$ = $1 + $3; }
      | standard_function
      | log_function
      | conversion
+     | VARIABLE
      ;
 
 term : term MUL factor                  { $$ = $1 * $3; }
@@ -60,6 +63,7 @@ power : factor POW factor               { $$ = pow($1, $3); }
      ;
 
 factor : NUM                            /* default action: { $$ = $1; } */
+     | PI                               { $$ = 3.14; }
      | LPAREN expr RPAREN               { $$ = $2; }
      ; 
 
@@ -89,6 +93,8 @@ conversion : expr GBP_TO_USD            { $$ = gbp_to_usd($1); }
      | expr FAH_TO_CEL                  { $$ = fah_to_cel($1); }
      | expr MI_TO_KM                    { $$ = m_to_km($1); }
      | expr KM_TO_MI                    { $$ = km_to_m($1); }
+
+assignment : VAR_KEYWORD VARIABLE EQUALS expr {}
 %%
 
 int main()

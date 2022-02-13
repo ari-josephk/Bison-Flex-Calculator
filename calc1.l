@@ -17,6 +17,7 @@
 "/"                     { return DIV; }
 "("                     { return LPAREN; }
 ")"                     { return RPAREN; }
+"="                     { return EQUALS; }
 "pow"                   { return POW; }
 "mod"                   { return MOD; }
 "floor"                 { return FLOOR; }
@@ -37,7 +38,10 @@
 "fah_to_cel"            { return FAH_TO_CEL; }
 "mi_to_km"              { return MI_TO_KM; }
 "km_to_mi"              { return KM_TO_MI; }
-(\n|\r\n)                    { return EOL;}     
+"pi"                    { return PI;}
+"var"                   { return VAR_KEYWORD; }
+[A-Za-z][][A-Za-z0-9.]* { return VARIABLE; }
+(\n|\r\n)               { return EOL;}     
 
 [ \t]+              { /* Ignore white characters. */ }
 .                       { std::cerr << "Invalid token" << std::endl; exit(1); }
