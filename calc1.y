@@ -1,7 +1,34 @@
 %{
 #include <iostream>
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 #include "util.h"
+
+typedef struct var { char name[64]; float val; struct var *next; } var;
+
+var var_table_tail = {"Test", 0, NULL};
+var *var_table = &var_table_tail;
+
+var *get_var(char *name){
+     for (var *p = var_table; p != &var_table_tail; p = p->next){
+          std::cout << "test" << std::endl;
+          if (strcmp (p->name, name) == 0)
+               return p;
+     }
+     return NULL;
+}
+
+void put_var(char *name, float val){
+     var *put = (var *)malloc(sizeof(var));
+     char put_name[64];
+     strcopy(put_name, name);
+     put->name = put_name;
+     std::cout << "test1" << std::endl;
+     put->val = val;
+     put->next = var_table;
+     var_table = put;
+}
 
 int yylex(); // A function that is to be generated and provided by flex,
              // which returns a next token when called repeatedly.
@@ -10,6 +37,7 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 
 %union {
     float val;
+    char* id;
     /* You may include additional fields as you want. */
     /* char op; */
 };
@@ -24,7 +52,8 @@ int yyerror(const char *p) { std::cerr << "error: " << p << std::endl; };
 %token PI
 %token GBP_TO_USD USD_TO_GBP GBP_TO_EURO EURO_TO_GBP USD_TO_EURO EURO_TO_USD CEL_TO_FAH FAH_TO_CEL MI_TO_KM KM_TO_MI
 %token VAR_KEYWORD 
-%token <val> NUM VARIABLE
+%token <val> NUM
+%token <char*> VARIABLE
 %token EOL
 
 %type <val> expr term power factor trig_function standard_function log_function conversion
@@ -50,7 +79,14 @@ expr : expr PLUS term                   { $$ = $1 + $3; }
      | standard_function
      | log_function
      | conversion
-     | VARIABLE
+     | VARIABLE                         {
+                                             var *a = get_var(yylval.id);
+                                             if(a) $$ = a->val;
+                                             else {
+                                                  std::cout << yylval.id << " not defined!" << std::endl;
+                                                  YYABORT;
+                                             }
+                                        }
      ;
 
 term : term MUL factor                  { $$ = $1 * $3; }
@@ -94,7 +130,11 @@ conversion : expr GBP_TO_USD            { $$ = gbp_to_usd($1); }
      | expr MI_TO_KM                    { $$ = m_to_km($1); }
      | expr KM_TO_MI                    { $$ = km_to_m($1); }
 
-assignment : VAR_KEYWORD VARIABLE EQUALS expr {}
+assignment : VAR_KEYWORD VARIABLE EQUALS expr { 
+                                             char name[64];
+                                             strcpy(name, yylval.id);
+                                             put_var(name, $4); 
+                                        }
 %%
 
 int main()
