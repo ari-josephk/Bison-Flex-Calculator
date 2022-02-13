@@ -23,12 +23,14 @@
 "mod"                   { return MOD; }
 "floor"                 { return FLOOR; }
 "ceil"                  { return CEIL; }
+"sqrt"                  { return SQRT; }
 "abs"                   { return ABS; }
 "sin"                   { return SIN; }
 "cos"                   { return COS; }
 "tan"                   { return TAN; }
 "log2"                  { return LOG2; }
 "log10"                 { return LOG10; }
+"factorial"             { return FACTORIAL; }
 "gbp_to_usd"            { return GBP_TO_USD; }
 "usd_to_gbp"            { return USD_TO_GBP; }
 "gbp_to_euro"           { return GBP_TO_EURO; }
