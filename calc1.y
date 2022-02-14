@@ -55,18 +55,18 @@ expr : expr PLUS term                   { $$ = $1 + $3; }
      | term                            /* default action: { $$ = $1; } */
      ;
 
-term : term MUL factor                  { $$ = $1 * $3; }
-     | term DIV factor                  { $$ = $1 / $3; }
+term : term MUL power                   { $$ = $1 * $3; }
+     | term DIV power                   { $$ = $1 / $3; }
      | term LPAREN expr RPAREN          { $$ = $1 * $3; }
-     | power 
-     | function                          /* default action: { $$ = $1; } */
+     | power
      ;
 
-power : factor POW factor               { $$ = pow($1, $3); }
-     | factor
+power : function POW power              { $$ = pow($1, $3); }
+     | SQRT factor                      { $$ = sqrt($2); }
+     | function
      ;
 
-factor : NUM                            /* default action: { $$ = $1; } */
+factor : NUM
      | MINUS factor                     { $$ = -$2; }
      | PI                               { $$ = 3.14; }
      | LPAREN expr RPAREN               { $$ = $2; }
@@ -84,6 +84,7 @@ function:  trig_function
      | standard_function
      | log_function
      | conversion
+     | factor
      ;
 
 trig_function : COS factor              { $$ = cos($2); }
@@ -91,11 +92,10 @@ trig_function : COS factor              { $$ = cos($2); }
      | TAN factor                       { $$ = tan($2); }
      ;
 
-standard_function : factor MOD factor     { $$ = modulo($1, $3); }
+standard_function : function MOD factor     { $$ = modulo($1, $3); }
      | FLOOR factor                     { $$ = floor($2); }
      | CEIL factor                      { $$ = ceil($2); }
      | ABS factor                       { $$ = fabs($2); }
-     | SQRT factor                      { $$ = sqrt($2); }
      | factor FACTORIAL                 { $$ = factorial($1); }
      ;
 

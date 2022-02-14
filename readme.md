@@ -12,7 +12,10 @@ To clean object files and executable, run
 
 ## Notes
 - The var.h file contains the logic for creating and storing variables, so make sure to include it in directory when compiling.
-- All "function" operations only take one "factor" token per argument. Therefore, for example
-```sin pi/2``` will be evaluated as ```sin(pi)/2``` not ```sin(pi/2)```. To calculate ```sin(pi/2)```, it must be entered as ```sin(pi/2)```. This applies to all function and conversion operators
+- The power function (^) is right associative
+- All "function" operations have precedence between B and O in BODMAS. In other words, they are evaluated after brackets. 
+- All "function" operations only take one "factor" token (or B in BODMAS) per argument. Therefore, for example ```sin pi/2``` will be evaluated as ```sin(pi)/2``` not ```sin(pi/2)```. To calculate ```sin(pi/2)```, it must be entered as ```sin(pi/2)```. This applies to all function and conversion operators
+- Because of the above, to use functions as arguments to other functions, you must use brackets:
+```abs (abs 2)``` not ```abs abs 2```
 - Max variable name length of 63 characters. More may cause segfaults
 - Referencing variables that don't exist will cause calculator to abort

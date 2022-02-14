@@ -19,8 +19,8 @@
 "("                     { return LPAREN; }
 ")"                     { return RPAREN; }
 "="                     { return EQUALS; }
-pow|POW                 { return POW; }
-mod|MOD                 { return MOD; }
+pow|POW|^               { return POW; }
+mod|MOD|%               { return MOD; }
 floor|FLOOR             { return FLOOR; }
 ceil|CEIL               { return CEIL; }
 sqrt|SQRT               { return SQRT; }
