@@ -1,5 +1,11 @@
 # Bison Flex Calculator
 
+This is a simple calculator built in Flex and Bison. Solves any expression using proper BODMAS precedence and correct associativity. 
+
+Some features include:
+- Unit Conversions   ```mi_to_km```
+- Variable Storage   ```var x = 50```
+
 ## How to run
 To build the executable, simply run 
 ```make``` or ```make build```
